@@ -1,5 +1,7 @@
 package com.dynamic.data.service.impl;
 
+
+
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,20 +21,22 @@ import lombok.extern.slf4j.Slf4j;
 
 @Slf4j
 @Service
-public class UserProfileServiceImpl implements UserProfileService{
-	@Autowired UserProfileRepository userProfileRepository;
-	@Autowired UserValidation userValidation;
+public class UserProfileServiceImpl implements UserProfileService {
+	@Autowired
+	UserProfileRepository userProfileRepository;
+	@Autowired
+	UserValidation userValidation;
 	@Autowired
 	private MyUserDetailsService myUserDetailsService;
-	@Autowired UserValidation usrValidation;
-	
-		
+	@Autowired
+	UserValidation usrValidation;
+
 	@Override
 	public UserProfileModel registerUserProfile(UserProfileModel userProfileModel) {
-		System.out.println("Email has been registered to User :" +userProfileModel);
-		boolean checkEmail=userValidation.checkEmailExist(userProfileModel.getEmail());
-		if(!checkEmail) {
-			return userProfileRepository.save(userProfileModel);	
+		System.out.println("Email has been registered to User :" + userProfileModel);
+		boolean checkEmail = userValidation.checkEmailExist(userProfileModel.getEmail());
+		if (!checkEmail) {
+			return userProfileRepository.save(userProfileModel);
 		}
 		throw new EmailIdAlreadyExist("Email ID already exist");
 	}
@@ -41,19 +45,18 @@ public class UserProfileServiceImpl implements UserProfileService{
 	public List<UserProfileModel> getUSerByEmail(String email) {
 		UserDetails usrName = myUserDetailsService
 				.loadUserByUsername(SecurityContextHolder.getContext().getAuthentication().getName());
-		
-		System.out.println("username is "+usrName.getUsername());
+
+		System.out.println("username is " + usrName.getUsername());
 		boolean checkIfUserExist = usrValidation.checkEmailExist(email);
-		log.debug("checking username********************"+usrName.getUsername());
-		if(checkIfUserExist) {
-			List<UserProfileModel> profileModels=userProfileRepository.findUserByEmail(email);
-			log.debug("checking profileModels********************"+profileModels.size());
-			if(!CommonValidator.checkIfEmpty(profileModels)) {
+		log.debug("checking username********************" + usrName.getUsername());
+		if (checkIfUserExist) {
+			List<UserProfileModel> profileModels = userProfileRepository.findUserByEmail(email);
+			log.debug("checking profileModels********************" + profileModels.size());
+			if (!CommonValidator.checkIfEmpty(profileModels)) {
 				return profileModels;
-			}else
-			throw new EmailIdAlreadyExist("Email ID Not exist");
-		}
-		 else
+			} else
+				throw new EmailIdAlreadyExist("Email ID Not exist");
+		} else
 			throw new IncorrectPassword("Incorrect Password");
 	}
 }

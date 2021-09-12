@@ -8,7 +8,8 @@ import org.springframework.data.mongodb.repository.Query;
 import com.dynamic.data.entity.UserProfileModel;
 
 public interface UserProfileRepository extends MongoRepository<UserProfileModel, String> {
-@Query("{'email':?0}")
+
+	@Query("{'email':?0}")
 	public List<UserProfileModel> findUserByEmail(String email);
 
 }

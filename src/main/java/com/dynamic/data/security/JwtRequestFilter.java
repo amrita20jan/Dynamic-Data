@@ -22,43 +22,43 @@ import com.google.common.net.HttpHeaders;
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private MyUserDetailsService userDetailsService;
+	@Autowired
+	private MyUserDetailsService userDetailsService;
 
-    @Autowired
-    private JwtUtil jwtUtil;
+	@Autowired
+	private JwtUtil jwtUtil;
 
-    @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
-            throws ServletException, IOException {
+	@Override
+	protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+			throws ServletException, IOException {
 
-        final String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
-        //System.out.println("authorizationHeader"+authorizationHeader);
+		final String authorizationHeader = request.getHeader(HttpHeaders.AUTHORIZATION);
+		// System.out.println("authorizationHeader"+authorizationHeader);
 
-        String username = null;
-        String jwt = null;
+		String username = null;
+		String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Dynamic")) {
-            jwt = authorizationHeader.substring(9,150);
-            System.out.println("jwt is "+jwt);
-            username = jwtUtil.extractUsername(jwt);
-            System.out.println("usrname"+username);
-        }
-        if (username != null ) {
-           UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-           System.out.println("checking username*****"+userDetails.getUsername());
-           
-            if (jwtUtil.validateToken(jwt, userDetails)) {
+		if (authorizationHeader != null && authorizationHeader.startsWith("Dynamic")) {
+			jwt = authorizationHeader.substring(9, 152);
+			System.out.println("jwt is " + jwt);
+			username = jwtUtil.extractUsername(jwt);
+			System.out.println("usrname" + username);
+		}
+		if (username != null) {
+			UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+			System.out.println("checking username*****" + userDetails.getUsername());
 
-                UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                usernamePasswordAuthenticationToken
-                        .setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+			if (jwtUtil.validateToken(jwt, userDetails)) {
 
-            }
-        }
-        chain.doFilter(request, response);
-    }
+				UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = new UsernamePasswordAuthenticationToken(
+						userDetails, null, userDetails.getAuthorities());
+				usernamePasswordAuthenticationToken
+						.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+				SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
+
+			}
+		}
+		chain.doFilter(request, response);
+	}
 
 }

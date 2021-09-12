@@ -4,12 +4,10 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Document(collection = "UserProfile")
@@ -20,8 +18,7 @@ public class UserProfileModel {
 	private String name;
 	private String email;
 	private String password;
-	private String checksum;
 	private String mobileNumber;
 	private String role;
-	
+
 }

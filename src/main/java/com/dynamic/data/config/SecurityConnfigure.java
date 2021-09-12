@@ -22,29 +22,28 @@ public class SecurityConnfigure extends WebSecurityConfigurerAdapter {
 
 	@Autowired
 	private UserDetailsService myUserDetailsService;
+	
 	@Autowired
 	private JwtRequestFilter jwtRequestFilter;
 
 	@Autowired
 	public void configure(AuthenticationManagerBuilder auth) throws Exception {
-		//http.csrf().disable();
+		// http.csrf().disable();
 		auth.userDetailsService(myUserDetailsService);
-		
+
 	}
 
-	
-	  @Bean public PasswordEncoder passwordEncoder() 
-	  { 
-		  return NoOpPasswordEncoder.getInstance();
-		  
-	  }
-	 
-	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+		return NoOpPasswordEncoder.getInstance();
+
+	}
+
 	/*
 	 * @Bean public PasswordEncoder passwordEncoder() { return new
 	 * BCryptPasswordEncoder(); }
 	 */
- 
+
 	@Bean
 	@Override
 	public AuthenticationManager authenticationManagerBean() throws Exception {
@@ -53,11 +52,10 @@ public class SecurityConnfigure extends WebSecurityConfigurerAdapter {
 
 	@Override
 	protected void configure(HttpSecurity httpSecurity) throws Exception {
-		//httpSecurity.requiresChannel().antMatchers("/secure*").requiresSecure();
-		  httpSecurity.requiresChannel().antMatchers("/secure/**").requiresSecure()
-		  .and().httpBasic().and().csrf().disable().
-		  exceptionHandling().and().sessionManagement()
-		  .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-		 httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+		// httpSecurity.requiresChannel().antMatchers("/secure*").requiresSecure();
+		httpSecurity.requiresChannel().antMatchers("/secure/**").requiresSecure().and().httpBasic().and().csrf()
+				.disable().exceptionHandling().and().sessionManagement()
+				.sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+		httpSecurity.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 	}
 }
